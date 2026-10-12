@@ -1,0 +1,812 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>სიზმრების ოთახი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: a dark berry bedroom wall with a left-aligned hero (sleepy moon character + music), then one chunky sticker-style toy panel that holds six tabbed games. Single committed look, so no light/dark switch. */
+:root {
+  --bg: #241033;
+  --bg-2: #3b1b4f;
+  --glow: #ff9ebb;
+  --panel: #fff1f5;
+  --ink: #4a1d3d;
+  --ink-soft: #8a4f73;
+  --blush: #ff9ebb;
+  --blush-deep: #c95f86;
+  --butter: #ffe29a;
+  --mint: #9ae6c7;
+  --text: #fbe9f1;
+  --muted: #d3b3d8;
+  --line: #5d3573;
+  --card: #33174a;
+  --bg-3: #5a2a66;
+  --soft: #ffd9e6;
+  --font: "Noto Sans Georgian", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+:root[data-skin="lavender"] {
+  --bg: #1f1740; --bg-3: #4a3d8f; --card: #2d2358; --line: #4f4390; --blush: #b9a8ff; --blush-deep: #7b68d6;
+  --panel: #f3f0ff; --ink: #2e2260; --ink-soft: #6a5aa8; --muted: #c6bdf0; --text: #f1eeff; --soft: #ddd5ff;
+}
+:root[data-skin="mint"] {
+  --bg: #0f2a2e; --bg-3: #1f5a55; --card: #173f43; --line: #2c6a68; --blush: #8fe3c3; --blush-deep: #3fa383;
+  --panel: #effcf6; --ink: #17463f; --ink-soft: #4f8a7c; --muted: #a9dccf; --text: #e8fbf4; --soft: #cdf3e3;
+}
+:root[data-skin="peach"] {
+  --bg: #3a1a14; --bg-3: #7a3a2a; --card: #522820; --line: #7d4535; --blush: #ffb48a; --blush-deep: #d97a4a;
+  --panel: #fff3ea; --ink: #5a2a1a; --ink-soft: #9a5a3f; --muted: #e6bfae; --text: #fff0e8; --soft: #ffdcc6;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: radial-gradient(90% 50% at 85% 0%, var(--bg-3) 0%, transparent 70%), var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  padding-inline: 1rem;
+  padding-block: 0 4rem;
+  overflow-x: hidden;
+}
+#sky-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+#sky-bg i {
+  position: absolute; bottom: -2rem; font-style: normal; color: var(--blush); opacity: 0;
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  15% { opacity: .35; }
+  100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+}
+main { position: relative; z-index: 1; max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { margin: 0; line-height: 1.25; text-wrap: balance; font-weight: 800; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--butter); outline-offset: 3px; border-radius: 8px; }
+
+.btn {
+  background: var(--blush); color: var(--ink); border: 0; border-radius: 999px;
+  padding: .65rem 1.4rem; font-weight: 700;
+  box-shadow: 0 .28rem 0 var(--blush-deep); transition: transform .1s, box-shadow .1s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(.22rem); box-shadow: 0 .06rem 0 var(--blush-deep); }
+.btn.soft { background: var(--soft); }
+.skins { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; color: var(--muted); font-size: .95rem; }
+.skin { width: 2rem; height: 2rem; border-radius: 50%; border: 3px solid transparent; padding: 0; box-shadow: 0 0 0 2px var(--line); }
+.skin[aria-pressed="true"] { border-color: var(--text); }
+.btn.dark { background: transparent; color: var(--text); box-shadow: none; border: 2px solid var(--line); }
+
+/* hero */
+.hero { display: flex; flex-wrap: wrap-reverse; align-items: center; gap: 1.5rem 2.5rem; padding-block: 3.5rem 2.5rem; }
+.hero-text { flex: 1 1 20rem; min-width: 0; display: flex; flex-direction: column; gap: 1.1rem; }
+.hero h1 { font-size: clamp(2.1rem, 7vw, 3.4rem); }
+.hero h1 em { font-style: normal; color: var(--blush); }
+.hero p { margin: 0; color: var(--muted); max-width: 32rem; }
+.namebox { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; color: var(--muted); font-size: .95rem; }
+.namebox input {
+  font: inherit; color: var(--text); background: var(--card); border: 2px solid var(--line);
+  border-radius: 999px; padding: .45rem 1rem; min-width: 0; width: 12rem;
+}
+.namebox input::placeholder { color: #9b7aa8; }
+.moonchar { flex: 0 0 auto; width: 9.5rem; filter: drop-shadow(0 0 1.5rem rgba(255, 226, 154, .4)); animation: bob 6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-.6rem) rotate(-3deg); } }
+
+/* music card */
+.player {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.2rem;
+  background: var(--card); border: 2px solid var(--line); border-radius: 1.5rem; padding: .9rem 1.1rem;
+}
+.eq { display: flex; align-items: flex-end; gap: 3px; height: 1.4rem; }
+.eq b { width: 4px; height: 30%; background: var(--blush); border-radius: 2px; }
+.player.on .eq b { animation: eq .9s ease-in-out infinite; }
+.player.on .eq b:nth-child(2) { animation-delay: .2s; }
+.player.on .eq b:nth-child(3) { animation-delay: .4s; }
+.player.on .eq b:nth-child(4) { animation-delay: .1s; }
+@keyframes eq { 50% { height: 100%; } }
+.track { font-weight: 700; font-size: .95rem; }
+.vol { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .9rem; }
+.vol input { width: 6.5rem; accent-color: var(--blush); }
+
+/* tabs + panel */
+.tabs { display: flex; gap: .5rem; overflow-x: auto; padding: .4rem .2rem .9rem; scrollbar-width: thin; }
+.tab {
+  flex: 0 0 auto; background: var(--card); color: var(--text); border: 2px solid var(--line);
+  border-radius: 999px; padding: .5rem 1.05rem; font-weight: 700; font-size: .95rem; white-space: nowrap;
+}
+.tab[aria-selected="true"] { background: var(--blush); color: var(--ink); border-color: var(--blush); }
+.panel {
+  background: var(--panel); color: var(--ink); border: 3px solid var(--blush); border-radius: 1.9rem;
+  box-shadow: 0 .55rem 0 var(--blush-deep); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem;
+}
+.panel h2 { font-size: 1.55rem; }
+.panel .how { margin: 0; color: var(--ink-soft); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
+.score { font-weight: 700; font-variant-numeric: tabular-nums; }
+.say { min-height: 3.4rem; font-size: 1.15rem; font-weight: 700; color: var(--blush-deep); text-wrap: balance; }
+.stage { position: relative; overflow: hidden; border-radius: 1.4rem; border: 2px solid var(--ink); }
+
+/* bubbles */
+.bubbles { height: 21rem; background: linear-gradient(#ffd3e4, #d8c8ff); }
+.bubble {
+  position: absolute; bottom: -6rem; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .9); padding: 0;
+  background: radial-gradient(circle at 30% 28%, #fff 0 12%, rgba(255, 255, 255, .35) 35%, rgba(255, 158, 187, .45) 100%);
+  animation: rise linear forwards;
+}
+@keyframes rise { to { transform: translateY(-29rem); } }
+.bubble.pop { animation: popb .3s ease-out forwards; pointer-events: none; }
+@keyframes popb { to { transform: scale(1.7); opacity: 0; } }
+
+/* sheep */
+.sheepstage { height: 15rem; background: linear-gradient(#ffc9a8, #ffe3ef 60%); }
+.sheepstage .dark { position: absolute; inset: 0; background: #130a26; opacity: 0; transition: opacity .6s; pointer-events: none; z-index: 3; }
+.ground { position: absolute; left: 0; right: 0; bottom: 0; height: 3.2rem; background: #8fd9b6; border-top: 2px solid var(--ink); z-index: 1; }
+.fence {
+  position: absolute; left: 50%; bottom: 2.6rem; width: 7rem; height: 3.4rem; transform: translateX(-50%); z-index: 1;
+  background:
+    linear-gradient(#fff, #fff) 0 .8rem / 100% .35rem no-repeat,
+    linear-gradient(#fff, #fff) 0 2rem / 100% .35rem no-repeat,
+    repeating-linear-gradient(90deg, #fff 0 .7rem, transparent .7rem 1.55rem);
+  border-radius: .3rem; opacity: .95;
+}
+.sheep { position: absolute; bottom: 2.4rem; left: -4.5rem; z-index: 2; border: 0; background: none; font-size: 2.8rem; line-height: 1; padding: .4rem; animation: run 5.5s linear forwards; }
+.sheep span { display: block; animation: hop 5.5s linear forwards; }
+@keyframes run { from { left: -4.5rem; } to { left: 100%; } }
+@keyframes hop { 0%, 36% { transform: translateY(0); } 50% { transform: translateY(-4.6rem) rotate(-10deg); } 64%, 100% { transform: translateY(0); } }
+.sheep.counted { animation-play-state: paused; opacity: .0; transition: opacity .25s; pointer-events: none; }
+.count-big { position: absolute; top: .7rem; left: 1rem; z-index: 4; font-weight: 800; font-size: 1.6rem; color: var(--ink); font-variant-numeric: tabular-nums; transition: color .6s; }
+.sheepstage.night .count-big { color: var(--butter); }
+.zzz { position: absolute; inset: 0; z-index: 5; display: none; place-items: center; font-size: 2.2rem; font-weight: 800; color: var(--butter); text-align: center; padding: 1rem; }
+.sheepstage.done .zzz { display: grid; }
+
+/* pet */
+.room { height: 19rem; background: linear-gradient(#ffd9e6 0 64%, #e3b48f 64%); }
+.room .shade { position: absolute; inset: 0; background: #130a26; opacity: 0; transition: opacity .8s; pointer-events: none; z-index: 3; }
+.room.asleep .shade { opacity: .6; }
+.pet { position: absolute; left: 50%; bottom: 1.8rem; width: 11.5rem; transform: translateX(-50%); z-index: 2; border: 0; background: none; padding: 0; animation: breathe 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes breathe { 50% { transform: translateX(-50%) scale(1.03, .97); } }
+.pet svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pet .eyes-closed { display: none; }
+.room.asleep .eyes-open { display: none; }
+.room.asleep .eyes-closed { display: inline; }
+.pet .eyes-open { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+.pet.chew .mouth { animation: chew .25s 4; transform-box: fill-box; transform-origin: center; }
+@keyframes chew { 50% { transform: scaleY(1.9); } }
+.zz { position: absolute; left: 58%; top: 28%; z-index: 4; font-weight: 800; color: var(--butter); font-size: 1.6rem; display: none; animation: zfloat 2.4s ease-in-out infinite; }
+.room.asleep .zz { display: block; }
+@keyframes zfloat { 0% { transform: translate(0, 0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(1.8rem, -2.4rem); opacity: 0; } }
+.fx { position: absolute; z-index: 4; font-size: 1.8rem; pointer-events: none; animation: fxup 1.3s ease-out forwards; }
+@keyframes fxup { to { transform: translateY(-6rem) scale(1.3); opacity: 0; } }
+.fx.food { animation: food .7s ease-in forwards; }
+@keyframes food { from { transform: translateY(-4rem); opacity: 1; } to { transform: translateY(3.5rem) scale(.4); opacity: 0; } }
+.meters { display: flex; flex-wrap: wrap; gap: .4rem 1.5rem; font-weight: 700; }
+.meters span { letter-spacing: .08em; }
+
+/* garden */
+.garden { background: #c7efd9; padding: 1rem; }
+.plots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.plot {
+  position: relative; aspect-ratio: 1; border-radius: 1rem; border: 2px solid var(--ink); background: #b98558;
+  font-size: 2.1rem; display: grid; place-items: center; padding: 0; transition: transform .15s;
+}
+.plot:hover { transform: scale(1.04); }
+.plot .hint { font-size: .8rem; color: #fff; font-weight: 700; opacity: .85; }
+.plot .drop { position: absolute; top: .2rem; font-size: 1.1rem; animation: dropdown .6s ease-in forwards; }
+@keyframes dropdown { from { transform: translateY(-.4rem); opacity: 1; } to { transform: translateY(1.4rem); opacity: 0; } }
+.plot.bloom { background: #a8764c; animation: boing .5s; }
+@keyframes boing { 40% { transform: scale(1.18); } }
+.butterfly { position: absolute; font-size: 1.6rem; animation: flit 5s ease-in-out infinite; }
+@keyframes flit { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(2.5rem, -1.5rem) rotate(10deg); } 50% { transform: translate(5rem, .5rem); } 75% { transform: translate(2rem, 1.5rem) rotate(-10deg); } }
+
+/* xo */
+.xo { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; width: min(100%, 17rem); }
+.xo button {
+  aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 1rem; background: #ffe3ec;
+  font-size: 2.4rem; font-weight: 800; line-height: 1; padding: 0; transition: background .15s;
+}
+.xo button:hover:not(:disabled) { background: #ffd0e0; }
+.xo button:disabled { cursor: default; }
+.xo .p { color: #e0447a; }
+.xo .b { color: #d9a400; }
+.xo button.win { background: var(--mint); }
+
+/* gifts */
+.gifts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; max-width: 24rem; }
+.gift { aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 1.2rem; font-size: 2.6rem; padding: 0; background: #e8dcff; transition: transform .15s; }
+.gift:nth-child(2) { background: #ffe3ec; }
+.gift:nth-child(3) { background: #d6f5e8; }
+.gift:hover:not(.open) { transform: rotate(-5deg) scale(1.06); }
+.gift.open { animation: boing .5s; }
+.letter {
+  background: #fffaf0; border: 2px dashed var(--blush-deep); border-radius: 1.2rem; padding: 1.1rem 1.25rem; color: var(--ink);
+}
+.letter h3 { font-size: 1.1rem; margin-bottom: .5rem; }
+.letter p { margin: 0; }
+
+/* sleep mode */
+.sleepbar { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding-block: 2.5rem 0; color: var(--muted); }
+.sleepbar p { margin: 0; flex: 1 1 14rem; }
+#sleepOv {
+  position: fixed; inset: 0; z-index: 50; background: #0b0615; color: var(--text);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.4rem; text-align: center; padding: 2rem 1rem;
+  opacity: 0; transition: opacity 2.5s;
+}
+#sleepOv.on { opacity: 1; }
+#sleepOv .moonchar { width: 8rem; animation-duration: 9s; }
+#sleepOv h2 { font-size: clamp(1.7rem, 6vw, 2.6rem); color: var(--butter); }
+#sleepOv p { margin: 0; color: var(--muted); }
+#sleepOv .st { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--butter); animation: tw 4s ease-in-out infinite; }
+@keyframes tw { 50% { opacity: .2; } }
+
+@media (max-width: 30rem) { .panel { padding: 1.1rem; } .moonchar { width: 7.5rem; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<div id="sky-bg" aria-hidden="true"></div>
+<main>
+  <header class="hero">
+    <div class="hero-text">
+      <h1>ტკბილი ძილი, <em data-name>გოგონებო</em></h1>
+      <p>ეს ოთახი ყველა გოგონასთვისაა, ვინც დღეს ბევრი გააკეთა და ახლა დასვენება უნდა. აირჩიე ფერი, ჩაწერე სახელი და ითამაშე, სანამ თვალები არ დაგიმძიმდება.</p>
+      <div class="namebox">
+        <label for="nameIn">როგორ გქვია?</label>
+        <input id="nameIn" type="text" maxlength="20" placeholder="შენი სახელი" autocomplete="off">
+      </div>
+      <div class="skins" role="group" aria-label="ფერის არჩევა">
+        <span>შენი ფერი</span>
+        <button class="skin" type="button" data-skin="pink" style="background:#ff9ebb" aria-label="ვარდისფერი" aria-pressed="true"></button>
+        <button class="skin" type="button" data-skin="lavender" style="background:#b9a8ff" aria-label="ლავანდისფერი" aria-pressed="false"></button>
+        <button class="skin" type="button" data-skin="mint" style="background:#8fe3c3" aria-label="ბალახისფერი" aria-pressed="false"></button>
+        <button class="skin" type="button" data-skin="peach" style="background:#ffb48a" aria-label="ატმისფერი" aria-pressed="false"></button>
+      </div>
+      <div class="player" id="player">
+        <div class="eq" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
+        <span class="track" id="trackName">Wildflower</span>
+        <button class="btn" id="musicBtn" type="button" aria-pressed="false">ჩართვა</button>
+        <button class="btn dark" id="trackBtn" type="button">სხვა მელოდია</button>
+        <label class="vol" for="vol">ხმა <input id="vol" type="range" min="0" max="100" value="55"></label>
+        <audio id="song" src="wildflower.mp3" loop preload="none"></audio>
+      </div>
+    </div>
+    <svg class="moonchar" viewBox="0 0 160 170" aria-hidden="true">
+      <circle cx="82" cy="104" r="54" fill="#fff1c9"/>
+      <ellipse cx="58" cy="120" rx="9" ry="5.5" fill="#ff9ebb" opacity=".75"/>
+      <ellipse cx="108" cy="120" rx="9" ry="5.5" fill="#ff9ebb" opacity=".75"/>
+      <path d="M62 104 q8 8 16 0 M88 104 q8 8 16 0" stroke="#4a1d3d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M76 122 q6 6 12 0" stroke="#4a1d3d" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M34 72 C38 22 92 2 140 38 L128 74 Z" fill="#ff9ebb"/>
+      <path d="M28 76 Q82 92 134 74" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <circle cx="142" cy="36" r="11" fill="#fff"/>
+    </svg>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="თამაშები" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="pet" type="button">🐰 ბუსუსი</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="bubbles" type="button">🫧 ბუშტები</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="sheep" type="button">🐑 ცხვრები</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="garden" type="button">🌷 ბაღი</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="xo" type="button">❤ XO</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="gifts" type="button">🎁 სიურპრიზი</button>
+  </div>
+
+  <section class="panel" id="p-pet" role="tabpanel">
+    <h2>ბუსუსი</h2>
+    <p class="how">ბუსუსი პატარა ბუნია. მოეფერე, აჭამე და ბოლოს დააძინე.</p>
+    <div class="stage room" id="room">
+      <button class="pet" id="pet" type="button" aria-label="ბუსუსი">
+        <svg viewBox="0 0 200 200">
+          <ellipse cx="68" cy="52" rx="15" ry="42" transform="rotate(-10 68 52)" fill="#fff6ef" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="68" cy="56" rx="7" ry="28" transform="rotate(-10 68 56)" fill="#ffb7cc"/>
+          <ellipse cx="132" cy="52" rx="15" ry="42" transform="rotate(10 132 52)" fill="#fff6ef" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="132" cy="56" rx="7" ry="28" transform="rotate(10 132 56)" fill="#ffb7cc"/>
+          <circle cx="166" cy="152" r="15" fill="#fff" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="100" cy="128" rx="66" ry="58" fill="#fff6ef" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="74" cy="184" rx="22" ry="11" fill="#fff6ef" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="126" cy="184" rx="22" ry="11" fill="#fff6ef" stroke="#4a1d3d" stroke-width="3"/>
+          <ellipse cx="62" cy="138" rx="11" ry="7" fill="#ff9ebb" opacity=".7"/>
+          <ellipse cx="138" cy="138" rx="11" ry="7" fill="#ff9ebb" opacity=".7"/>
+          <g class="eyes-open"><circle cx="76" cy="120" r="7" fill="#4a1d3d"/><circle cx="124" cy="120" r="7" fill="#4a1d3d"/><circle cx="78" cy="117" r="2.3" fill="#fff"/><circle cx="126" cy="117" r="2.3" fill="#fff"/></g>
+          <g class="eyes-closed"><path d="M66 121 q10 9 20 0 M114 121 q10 9 20 0" stroke="#4a1d3d" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
+          <ellipse cx="100" cy="132" rx="5" ry="3.6" fill="#e0447a"/>
+          <path class="mouth" d="M92 140 q8 8 16 0" stroke="#4a1d3d" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <span class="zz" aria-hidden="true">Z z z</span>
+      <div class="shade"></div>
+    </div>
+    <div class="meters"><div>სიყვარული <span id="loveM"></span></div><div>მადა <span id="fullM"></span></div></div>
+    <div class="bar">
+      <button class="btn" id="petBtn" type="button">მოფერება</button>
+      <button class="btn soft" id="feedBtn" type="button">კვება</button>
+      <button class="btn soft" id="bedBtn" type="button">დაძინება</button>
+    </div>
+    <div class="say" id="petSay" aria-live="polite">ბუსუსი გელოდება.</div>
+  </section>
+
+  <section class="panel" id="p-bubbles" role="tabpanel" hidden>
+    <h2>ბუშტების გასკდომა</h2>
+    <p class="how">თითოეულ ბუშტში ტკბილი სიტყვა იმალება. გაჟეჟე თორმეტივე.</p>
+    <div class="bar"><button class="btn" id="bubStart" type="button">დაწყება</button><span class="score" id="bubScore" aria-live="polite">0 / 12</span></div>
+    <div class="stage bubbles" id="bubStage"></div>
+    <div class="say" id="bubSay" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="p-sheep" role="tabpanel" hidden>
+    <h2>დათვალე ცხვრები</h2>
+    <p class="how">ცხვრები ღობეს ახტებიან. შეეხე თითოეულს და დათვალე. თხუთმეტზე ძილი მოგეკარება.</p>
+    <div class="bar"><button class="btn" id="shStart" type="button">დაწყება</button></div>
+    <div class="stage sheepstage" id="shStage">
+      <div class="count-big" id="shCount" aria-live="polite">0 / 15</div>
+      <div class="fence"></div><div class="ground"></div>
+      <div class="dark" id="shDark"></div>
+      <div class="zzz" id="shZzz">თხუთმეტი! ახლა თვალები დახუჭე. ტკბილი ძილი.</div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-garden" role="tabpanel" hidden>
+    <h2>ღამის ბაღი</h2>
+    <p class="how">შეეხე მიწას: ჩაყარე თესლი, მორწყე და მოუსმინე, როგორ ყვავის. გაახარე რვავე ყვავილი.</p>
+    <div class="stage garden" id="garden"><div class="plots" id="plots"></div></div>
+    <div class="bar"><button class="btn soft" id="gardReset" type="button">ახალი ბაღი</button><span class="score" id="gardScore">0 / 8</span></div>
+    <div class="say" id="gardSay" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="p-xo" role="tabpanel" hidden>
+    <h2>XO გულით</h2>
+    <p class="how">შენ ხარ გული, მე ვარ ვარსკვლავი. შენ იწყებ.</p>
+    <div class="xo" id="xo"></div>
+    <div class="bar"><button class="btn soft" id="xoReset" type="button">თავიდან</button><span class="score" id="xoScore">შენ 0 : 0 მე</span></div>
+    <div class="say" id="xoSay" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="p-gifts" role="tabpanel" hidden>
+    <h2>სიურპრიზის ყუთები</h2>
+    <p class="how">გახსენი სამივე საჩუქარი. ბოლოს ღამის წერილიც გამოჩნდება.</p>
+    <div class="gifts" id="gifts"></div>
+    <div class="say" id="giftSay" aria-live="polite"></div>
+    <div class="letter" id="letter" hidden>
+      <h3>ღამის წერილი</h3>
+      <p id="letterText"></p>
+    </div>
+  </section>
+
+  <div class="sleepbar">
+    <p>როცა მზად იქნები, ჩართე ძილის რეჟიმი. ეკრანი დაბნელდება და მუსიკა ნელ-ნელა გაჩუმდება.</p>
+    <button class="btn" id="sleepBtn" type="button">დაძინების დრო</button>
+  </div>
+</main>
+
+<div id="sleepOv" hidden>
+  <svg class="moonchar" viewBox="0 0 160 170" aria-hidden="true">
+    <circle cx="82" cy="104" r="54" fill="#fff1c9"/>
+    <ellipse cx="58" cy="120" rx="9" ry="5.5" fill="#ff9ebb" opacity=".75"/>
+    <ellipse cx="108" cy="120" rx="9" ry="5.5" fill="#ff9ebb" opacity=".75"/>
+    <path d="M62 104 q8 8 16 0 M88 104 q8 8 16 0" stroke="#4a1d3d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M76 122 q6 6 12 0" stroke="#4a1d3d" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M34 72 C38 22 92 2 140 38 L128 74 Z" fill="#ff9ebb"/>
+    <path d="M28 76 Q82 92 134 74" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <circle cx="142" cy="36" r="11" fill="#fff"/>
+  </svg>
+  <h2>ტკბილი ძილი, <span data-name>გოგონებო</span></h2>
+  <p>ღრმად ჩაისუნთქე და თვალები დახუჭე. ღამე მშვიდობისა.</p>
+  <button class="btn dark" id="wakeBtn" type="button">გაღვიძება</button>
+</div>
+
+<script>
+(function () {
+  /* ====== აქ შეგიძლია ტექსტები შეცვალო ====== */
+  var DEFAULT_NAME = "გოგონებო";
+  var BUBBLE_MSGS = [
+    "შენ ძალიან კარგი ადამიანი ხარ.",
+    "შენი ღიმილი დღეს ვიღაცას გაუხარდა.",
+    "ყველაფერი, რასაც აკეთებ, მნიშვნელოვანია.",
+    "შენ ძლიერი ხარ, ვიდრე გგონია.",
+    "დღეს რაც გაგიჭირდა, უკვე უკან დარჩა.",
+    "შენს გვერდით ყველას თავი კარგად აქვს.",
+    "შენ იმსახურებ დასვენებასა და სიმშვიდეს.",
+    "შენი სიცილი ძალიან ლამაზი ხმაა.",
+    "ხვალ ახალი, კარგი დღე გელოდება.",
+    "შენი კეთილი გული შესამჩნევია.",
+    "ისეთი ხარ, როგორიც უნდა იყო.",
+    "დღეს შენი თავით უნდა იამაყო."
+  ];
+  var GIFTS = [
+    "ერთი დიდი, თბილი ჩახუტება.",
+    "ერთი სურვილი, რომელიც ხვალ აგეხდება.",
+    "ერთი მშვიდი ღამე და ლამაზი სიზმარი."
+  ];
+  var LETTER = "დღეს რაც არ უნდა ყოფილიყო, ახლა დასვენების დროა. მადლობა იმისთვის, რომ ხარ ისეთი, როგორიც ხარ. თვალები დახუჭე, ღრმად ჩაისუნთქე და დაე, ძილმა ნაზად წაგიყვანოს. ტკბილი სიზმრები.";
+  /* ========================================= */
+
+  var $ = function (id) { return document.getElementById(id); };
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  // სახელი
+  var NAME = "";
+  try { NAME = localStorage.getItem("sd_name") || ""; } catch (e) {}
+  function applyName() {
+    var n = NAME || DEFAULT_NAME;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-name]"), function (el) { el.textContent = n; });
+  }
+  $("nameIn").value = NAME;
+  $("nameIn").addEventListener("input", function () {
+    NAME = this.value.trim();
+    try { localStorage.setItem("sd_name", NAME); } catch (e) {}
+    applyName();
+  });
+  applyName();
+
+  // ფერის არჩევა
+  var SKIN = "pink";
+  try { SKIN = localStorage.getItem("sd_skin") || "pink"; } catch (e) {}
+  function applySkin(s) {
+    SKIN = s; document.documentElement.setAttribute("data-skin", s);
+    Array.prototype.forEach.call(document.querySelectorAll(".skin"), function (b) { b.setAttribute("aria-pressed", b.dataset.skin === s); });
+    try { localStorage.setItem("sd_skin", s); } catch (e) {}
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".skin"), function (b) {
+    b.addEventListener("click", function () { applySkin(b.dataset.skin); });
+  });
+  applySkin(SKIN);
+
+  // ფონზე მცურავი გულები
+  var bgl = $("sky-bg"), glyphs = ["♥", "✦", "★", "♥"];
+  for (var i = 0; i < 16; i++) {
+    var h = document.createElement("i");
+    h.textContent = pick(glyphs);
+    h.style.left = Math.random() * 100 + "%";
+    h.style.fontSize = (0.8 + Math.random() * 1.2).toFixed(2) + "rem";
+    h.style.animationDuration = (16 + Math.random() * 18).toFixed(1) + "s";
+    h.style.animationDelay = (-Math.random() * 30).toFixed(1) + "s";
+    bgl.appendChild(h);
+  }
+
+  // ---------- აუდიო ----------
+  var ctx, master, delay, lullabyOn = false, lullabyTimer = null, step = 0, songOn = false, track = "song", fade = 1, fadeTimer = null;
+  var F = { G2: 98, A2: 110, C3: 130.81, C4: 261.63, D4: 293.66, E4: 329.63, G4: 392, A4: 440, C5: 523.25 };
+  var MELODY = ["E4", 0, "G4", 0, "A4", "G4", 0, "E4", "D4", 0, "E4", 0, "G4", 0, "E4", 0,
+                "C4", 0, "D4", 0, "E4", "D4", 0, "C4", "D4", 0, 0, 0, "C5", 0, "A4", 0];
+  var BASS = ["C3", "A2", "C3", "G2"];
+  function ensureCtx() {
+    if (ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain(); master.connect(ctx.destination);
+    delay = ctx.createDelay(1); delay.delayTime.value = 0.42;
+    var fb = ctx.createGain(); fb.gain.value = 0.38;
+    var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800;
+    delay.connect(lp); lp.connect(fb); fb.connect(delay); lp.connect(master);
+  }
+  function level() { return ($("vol").value / 100) * fade; }
+  function setVol() {
+    if (master) master.gain.value = level();
+    $("song").volume = Math.min(1, level());
+  }
+  function note(freq, t, dur, vol, type) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(master); g.connect(delay);
+    o.start(t); o.stop(t + dur + 0.1);
+  }
+  function tick() {
+    var t = ctx.currentTime + 0.05, n = MELODY[step % MELODY.length];
+    if (n) note(F[n], t, 1.6, 0.16, "sine");
+    if (step % 8 === 0) {
+      var b = BASS[(step / 8) % BASS.length];
+      note(F[b], t, 3.6, 0.2, "triangle");
+      note(F[b] * 2, t, 3.6, 0.05, "sine");
+    }
+    step++;
+  }
+  function sfx(f1, f2, dur, vol) {
+    try {
+      ensureCtx(); if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume();
+      var t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(f1, t); o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  function isOn() { return track === "song" ? songOn : lullabyOn; }
+  function stopAll() {
+    if (lullabyTimer) { clearInterval(lullabyTimer); lullabyTimer = null; }
+    lullabyOn = false;
+    $("song").pause(); songOn = false;
+  }
+  function refreshBtn() {
+    $("musicBtn").textContent = isOn() ? "გამორთვა" : "ჩართვა";
+    $("musicBtn").setAttribute("aria-pressed", isOn());
+    $("player").classList.toggle("on", isOn());
+    $("trackName").textContent = track === "song" ? "Wildflower" : "ძილისპირული";
+  }
+  function startCurrent() {
+    setVol();
+    if (track === "song") {
+      songOn = true;
+      var p = $("song").play();
+      if (p && p.catch) p.catch(function () { songOn = false; refreshBtn(); });
+    } else {
+      ensureCtx(); if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume();
+      tick(); lullabyTimer = setInterval(tick, 500); lullabyOn = true;
+    }
+    refreshBtn();
+  }
+  $("musicBtn").addEventListener("click", function () { if (isOn()) { stopAll(); refreshBtn(); } else startCurrent(); });
+  $("trackBtn").addEventListener("click", function () {
+    var was = isOn(); stopAll();
+    track = track === "song" ? "lullaby" : "song";
+    if (was) startCurrent(); else refreshBtn();
+  });
+  $("vol").addEventListener("input", setVol);
+  refreshBtn();
+
+  // ---------- ტაბები ----------
+  var tabs = document.querySelectorAll(".tab"), cleanup = {};
+  function showTab(name) {
+    Array.prototype.forEach.call(tabs, function (t) { t.setAttribute("aria-selected", t.dataset.tab === name); });
+    ["pet", "bubbles", "sheep", "garden", "xo", "gifts"].forEach(function (n) { $("p-" + n).hidden = n !== name; });
+    if (name !== "bubbles" && cleanup.bub) cleanup.bub();
+    if (name !== "sheep" && cleanup.sheep) cleanup.sheep();
+  }
+  Array.prototype.forEach.call(tabs, function (t) { t.addEventListener("click", function () { showTab(t.dataset.tab); }); });
+
+  // ---------- ბუსუსი ----------
+  var love = 0, full = 0, asleep = false, room = $("room");
+  function meters() {
+    var l = "", f = "";
+    for (var i = 0; i < 5; i++) { l += i < love ? "💗" : "🤍"; f += i < full ? "🍪" : "▫️"; }
+    $("loveM").textContent = l; $("fullM").textContent = f;
+  }
+  meters();
+  function say(id, txt) { $(id).textContent = txt; }
+  function fx(txt, cls, x, y) {
+    var e = document.createElement("span");
+    e.className = "fx" + (cls ? " " + cls : ""); e.textContent = txt;
+    e.style.left = x + "%"; e.style.top = y + "%";
+    e.addEventListener("animationend", function () { e.remove(); });
+    room.appendChild(e);
+  }
+  function petIt() {
+    if (asleep) { say("petSay", "შშშ... ბუსუსს სძინავს."); return; }
+    for (var i = 0; i < 3; i++) fx(pick(["💗", "💖", "✨"]), "", 38 + Math.random() * 24, 30 + Math.random() * 20);
+    if (love < 5) love++; meters();
+    sfx(520, 880, 0.25, 0.08);
+    say("petSay", love >= 5 ? "ბუსუსი სიყვარულით სავსეა." : pick(["ბუსუსს ძალიან უყვარს შენი ხელები.", "დრრრრ... სასიამოვნოა.", "კიდევ, კიდევ!", "ბუსუსი გიღიმის."]));
+  }
+  $("petBtn").addEventListener("click", petIt);
+  $("pet").addEventListener("click", petIt);
+  $("feedBtn").addEventListener("click", function () {
+    if (asleep) { say("petSay", "ბუსუსს სძინავს, ჯერ გააღვიძე."); return; }
+    if (full >= 5) { say("petSay", "ბუსუსი კარგად ჭამა. ახლა დასაძინებელია."); return; }
+    fx("🍪", "food", 46, 20);
+    setTimeout(function () {
+      $("pet").classList.remove("chew"); void $("pet").offsetWidth; $("pet").classList.add("chew");
+      sfx(300, 200, 0.12, 0.07); setTimeout(function () { sfx(300, 200, 0.12, 0.07); }, 250);
+      full++; meters();
+      say("petSay", pick(["ნამ-ნამ! გემრიელია.", "ბუსუსი გმადლობს.", "კიდევ ერთი ლუკმა?"]));
+    }, 600);
+  });
+  $("bedBtn").addEventListener("click", function () {
+    asleep = !asleep;
+    room.classList.toggle("asleep", asleep);
+    this.textContent = asleep ? "გაღვიძება" : "დაძინება";
+    say("petSay", asleep ? "შშშ... ბუსუსს სძინავს. ტკბილი ძილი." : "ბუსუსი გაიღვიძა და გიღიმის.");
+    sfx(asleep ? 600 : 400, asleep ? 300 : 700, 0.5, 0.06);
+  });
+
+  // ---------- ბუშტები ----------
+  var bubTimer = null, bubCount = 0, bubMsgs = [];
+  function bubStop() { clearInterval(bubTimer); bubTimer = null; }
+  cleanup.bub = function () { bubStop(); $("bubStage").innerHTML = ""; };
+  function bubSpawn() {
+    var b = document.createElement("button"), s = 3 + Math.random() * 2.2;
+    b.type = "button"; b.className = "bubble"; b.setAttribute("aria-label", "ბუშტი");
+    b.style.width = b.style.height = s + "rem";
+    b.style.left = Math.random() * 82 + "%";
+    b.style.animationDuration = (6.5 + Math.random() * 3).toFixed(1) + "s";
+    b.addEventListener("animationend", function () { if (!b.classList.contains("pop")) b.remove(); });
+    b.addEventListener("click", function () {
+      if (b.classList.contains("pop")) return;
+      b.classList.add("pop"); setTimeout(function () { b.remove(); }, 320);
+      bubCount++; $("bubScore").textContent = bubCount + " / 12";
+      sfx(700 + Math.random() * 500, 1500, 0.15, 0.09);
+      say("bubSay", bubMsgs[(bubCount - 1) % bubMsgs.length]);
+      if (bubCount >= 12) {
+        bubStop();
+        setTimeout(function () { $("bubStage").innerHTML = ""; say("bubSay", "თორმეტივე გასკდა! ახლა ეს სიტყვები შენთან დარჩება."); $("bubStart").textContent = "კიდევ ერთხელ"; }, 500);
+      }
+    });
+    $("bubStage").appendChild(b);
+  }
+  $("bubStart").addEventListener("click", function () {
+    cleanup.bub(); bubCount = 0; bubMsgs = shuffle(BUBBLE_MSGS.slice());
+    $("bubScore").textContent = "0 / 12"; say("bubSay", "");
+    this.textContent = "თავიდან";
+    bubSpawn(); bubTimer = setInterval(bubSpawn, 850);
+  });
+
+  // ---------- ცხვრები ----------
+  var shTimer = null, shCount = 0;
+  function shStop() { clearInterval(shTimer); shTimer = null; }
+  cleanup.sheep = function () {
+    shStop(); shCount = 0;
+    Array.prototype.forEach.call($("shStage").querySelectorAll(".sheep"), function (s) { s.remove(); });
+    $("shCount").textContent = "0 / 15"; $("shDark").style.opacity = 0;
+    $("shStage").classList.remove("night", "done");
+  };
+  function shSpawn() {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "sheep"; b.setAttribute("aria-label", "ცხვარი");
+    b.innerHTML = "<span>🐑</span>";
+    b.addEventListener("animationend", function (e) { if (e.animationName === "run") b.remove(); });
+    b.addEventListener("click", function () {
+      if (b.classList.contains("counted")) return;
+      b.classList.add("counted"); shCount++;
+      $("shCount").textContent = shCount + " / 15";
+      $("shDark").style.opacity = (shCount / 15 * 0.78).toFixed(2);
+      if (shCount > 6) $("shStage").classList.add("night");
+      sfx(330 - shCount * 8, 220 - shCount * 5, 0.3, 0.07);
+      if (shCount >= 15) {
+        shStop(); $("shStage").classList.add("done");
+        Array.prototype.forEach.call($("shStage").querySelectorAll(".sheep"), function (s) { s.remove(); });
+        $("shStart").textContent = "კიდევ ერთხელ";
+      }
+    });
+    $("shStage").appendChild(b);
+  }
+  $("shStart").addEventListener("click", function () {
+    cleanup.sheep(); this.textContent = "თავიდან";
+    shSpawn(); shTimer = setInterval(shSpawn, 1700);
+  });
+
+  // ---------- ბაღი ----------
+  var FLOWERS = ["🌷", "🌸", "🌻", "🌹", "🌼", "💐", "🪻", "🌺"];
+  var plotState = [];
+  function gardRender() {
+    var wrap = $("plots"), bloomN = 0;
+    wrap.innerHTML = "";
+    plotState.forEach(function (p, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "plot" + (p.s === 3 ? " bloom" : "");
+      b.setAttribute("aria-label", "მიწის ნაკვეთი " + (i + 1));
+      if (p.s === 0) b.innerHTML = '<span class="hint">შეეხე</span>';
+      else if (p.s === 1) b.textContent = "🌰";
+      else if (p.s === 2) b.textContent = "🌱";
+      else { b.textContent = p.f; bloomN++; }
+      b.addEventListener("click", function () {
+        if (p.s >= 3) { sfx(900, 1200, 0.2, 0.06); return; }
+        p.s++;
+        if (p.s === 3) p.f = pick(FLOWERS);
+        var d = document.createElement("span"); d.className = "drop"; d.textContent = "💧"; b.appendChild(d);
+        sfx(p.s === 3 ? 600 : 400, p.s === 3 ? 1400 : 700, 0.3, 0.08);
+        gardRender();
+      });
+      wrap.appendChild(b);
+    });
+    $("gardScore").textContent = bloomN + " / 8";
+    if (bloomN === 8) {
+      say("gardSay", "მთელი ბაღი გაიფურჩქნა! რა ლამაზია.");
+      if (!$("garden").querySelector(".butterfly")) {
+        var bf = document.createElement("span"); bf.className = "butterfly"; bf.textContent = "🦋"; bf.style.left = "10%"; bf.style.top = "40%";
+        $("garden").appendChild(bf);
+      }
+    } else say("gardSay", bloomN ? "შენი ბაღი იზრდება." : "");
+  }
+  function gardReset() {
+    plotState = []; for (var i = 0; i < 8; i++) plotState.push({ s: 0, f: "" });
+    var bf = $("garden").querySelector(".butterfly"); if (bf) bf.remove();
+    gardRender(); say("gardSay", "");
+  }
+  $("gardReset").addEventListener("click", gardReset);
+  gardReset();
+
+  // ---------- XO ----------
+  var LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  var board, xoLock, wins = 0, losses = 0;
+  function winnerOf(b) {
+    for (var i = 0; i < LINES.length; i++) { var l = LINES[i]; if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[0]] === b[l[2]]) return { w: b[l[0]], l: l }; }
+    return b.every(Boolean) ? { w: "d" } : null;
+  }
+  function mm(b, turn) {
+    var r = winnerOf(b); if (r) return r.w === "B" ? 1 : r.w === "P" ? -1 : 0;
+    var best = turn === "B" ? -2 : 2;
+    for (var i = 0; i < 9; i++) if (!b[i]) {
+      b[i] = turn; var s = mm(b, turn === "B" ? "P" : "B"); b[i] = "";
+      best = turn === "B" ? Math.max(best, s) : Math.min(best, s);
+    }
+    return best;
+  }
+  function botMove() {
+    var empty = [], i; for (i = 0; i < 9; i++) if (!board[i]) empty.push(i);
+    var mv;
+    if (Math.random() < 0.5) mv = pick(empty);
+    else {
+      var best = -2, opts = [];
+      empty.forEach(function (c) { board[c] = "B"; var s = mm(board, "P"); board[c] = ""; if (s > best) { best = s; opts = [c]; } else if (s === best) opts.push(c); });
+      mv = pick(opts);
+    }
+    board[mv] = "B";
+  }
+  function xoDraw() {
+    var g = $("xo"); g.innerHTML = "";
+    var res = winnerOf(board);
+    board.forEach(function (v, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("aria-label", "უჯრა " + (i + 1));
+      if (v) { b.textContent = v === "P" ? "♥" : "★"; b.className = v === "P" ? "p" : "b"; }
+      if (res && res.l && res.l.indexOf(i) > -1) b.classList.add("win");
+      b.disabled = !!v || xoLock || !!res;
+      b.addEventListener("click", function () { xoPlay(i); });
+      g.appendChild(b);
+    });
+  }
+  function xoEnd() {
+    var r = winnerOf(board); if (!r) return false;
+    if (r.w === "P") { wins++; say("xoSay", "გაიმარჯვე! ბრავო."); sfx(600, 1500, 0.5, 0.1); }
+    else if (r.w === "B") { losses++; say("xoSay", "ამჯერად მე მოვიგე, მაგრამ შენ მაინც უფრო საყვარელი ხარ."); }
+    else say("xoSay", "ფრე! ორივე კარგები ვართ.");
+    $("xoScore").textContent = "შენ " + wins + " : " + losses + " მე";
+    return true;
+  }
+  function xoPlay(i) {
+    if (board[i] || xoLock) return;
+    board[i] = "P"; sfx(500, 700, 0.12, 0.07);
+    if (xoEnd()) { xoDraw(); return; }
+    xoLock = true; xoDraw();
+    setTimeout(function () { botMove(); sfx(400, 300, 0.12, 0.07); xoLock = false; xoEnd(); xoDraw(); }, 550);
+  }
+  function xoReset() { board = ["","","","","","","","",""]; xoLock = false; say("xoSay", ""); xoDraw(); }
+  $("xoReset").addEventListener("click", xoReset);
+  xoReset();
+
+  // ---------- სიურპრიზი ----------
+  var opened = 0;
+  GIFTS.forEach(function (txt, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "gift"; b.textContent = "🎁"; b.setAttribute("aria-label", "საჩუქარი " + (i + 1));
+    b.addEventListener("click", function () {
+      if (b.classList.contains("open")) { say("giftSay", txt); return; }
+      b.classList.add("open"); b.textContent = "💝"; opened++;
+      say("giftSay", txt); sfx(500, 1400, 0.4, 0.1);
+      if (opened === GIFTS.length) { $("letterText").textContent = LETTER; $("letter").hidden = false; }
+    });
+    $("gifts").appendChild(b);
+  });
+
+  // ---------- ძილის რეჟიმი ----------
+  var ov = $("sleepOv");
+  for (var s = 0; s < 40; s++) {
+    var st = document.createElement("span"); st.className = "st";
+    st.style.left = Math.random() * 100 + "%"; st.style.top = Math.random() * 100 + "%";
+    st.style.animationDelay = (Math.random() * 4).toFixed(1) + "s";
+    ov.appendChild(st);
+  }
+  $("sleepBtn").addEventListener("click", function () {
+    ov.hidden = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { ov.classList.add("on"); }); });
+    clearInterval(fadeTimer); fade = 1;
+    fadeTimer = setInterval(function () {
+      fade -= 1 / 90; setVol();
+      if (fade <= 0) { clearInterval(fadeTimer); fadeTimer = null; stopAll(); refreshBtn(); fade = 1; setVol(); }
+    }, 1000);
+    $("wakeBtn").focus();
+  });
+  $("wakeBtn").addEventListener("click", function () {
+    clearInterval(fadeTimer); fadeTimer = null; fade = 1; setVol();
+    ov.classList.remove("on");
+    setTimeout(function () { ov.hidden = true; }, 600);
+  });
+})();
+</script>
+
+</body></html>
